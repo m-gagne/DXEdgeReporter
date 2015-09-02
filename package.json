@@ -1,0 +1,38 @@
+{
+    "name": "DXISVScanner",
+    "description": "Analyze ISV websites and give hints on how to be more standards compliant",
+    "version": "1.0.0",
+    "homepage": "",
+    "author": {
+        "name": "Microsoft"
+    },
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "bugs": {
+        "url": ""
+    },
+    "licenses": [
+        {
+            "type": "Apache v2 License",
+            "url": "https://github.com/InternetExplorer/modern.IE-static-code-scan/blob/master/LICENSE"
+        }
+    ],
+    "main": "dxisvscanner",
+    "engines": {
+        "node": "0.12.x",
+        "npm": "2.5.x"
+    },
+    "scripts": {
+        "run": "grunt scan"
+    },
+    "dependencies": {
+        "request": "2.30.x",
+        "grunt": "~0.4.1",
+        "bluebird": "^2.9.30",
+        "mkdirp": "^0.5.1"
+    },
+    "devDependencies": {},
+    "keywords": []
+}

@@ -32,7 +32,9 @@
         "grunt": "~0.4.1",
         "bluebird": "^2.9.30",
         "mkdirp": "^0.5.1",
-        "url": "latest"
+        "url": "latest",
+        "marked": "latest",
+        "promised-io": "latest"
     },
     "devDependencies": {},
     "keywords": []

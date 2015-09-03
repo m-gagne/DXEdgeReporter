@@ -64,41 +64,45 @@ function run(siteList) {
             return;
         }
 
-        // Retrieve & store the global summary    
-        var summary = dxResult.getGlobalSummary();
-    
-        var file = outputDir + "summary.json";
-        fs.writeFile(file, JSON.stringify(summary, null, 4), function(error){
-            if (error) {
-                return console.error(error);
-            }
-        }); 
-        
         // Retrieve & store the summary report as markdown  
         var markdown = dxResult.generateMarkdownReport();
+        var html = dxResult.markedownToHtml(markdown);
     
-        var markdownDir = "reports/" + testId + "/markdown/";
-        mkdirp(markdownDir);    
-        file = markdownDir + "report.md";
+        var file = outputDir + "report.md";
         fs.writeFile(file, markdown, function(error){
             if (error) {
                 return console.error(error);
             }
         });
         
+        file = outputDir + "report.html";
+        fs.writeFile(file, html, function(error){
+            if (error) {
+                return console.error(error);
+            }
+        });        
+                
         // Retrieve & store the individual reports as markdown
-        var markdownDetailsDir = "reports/" + testId + "/markdown/details/";
-        mkdirp(markdownDetailsDir);
+        var detailsDir = "reports/" + testId + "/details/";
+        mkdirp(detailsDir);
         var details = dxResult.getReportDetails();
         for (var i = 0; i < details.length; i++ ) {
             markdown = dxResult.generateDetailedMarkdownReport(details[i]);
+            html = dxResult.markedownToHtml(markdown)
 
-            file = markdownDetailsDir + details[i].domain + ".md";
+            file = detailsDir + details[i].domain + ".md";
             fs.writeFile(file, markdown, function(error){
                 if (error) {
                     return console.error(error);
                 }
-            });                          
+            });
+            
+            file = detailsDir + details[i].domain + ".html";
+            fs.writeFile(file, html, function(error){
+                if (error) {
+                    return console.error(error);
+                }
+            });            
         }
               
     }
@@ -122,25 +126,7 @@ function run(siteList) {
 
 function processResults(result, outputDir) {
     var data = dxResult.jsonToResults(result);
-    var domain = dxResult.getDomain(data);
-    var summary = dxResult.summarize(data);
-        
-    // store the full report
-    var file = outputDir + domain + ".detailed.json";
-    console.log("Saving report => " + file);
-    fs.writeFile(file, JSON.stringify(data, null, 4), function(error){
-        if (error) {
-            return console.error(error);
-        }
-    });
-    
-    // store the summary report
-    var file = outputDir + domain + ".summary.json";
-    fs.writeFile(file, JSON.stringify(summary, null, 4), function(error){
-        if (error) {
-            return console.error(error);
-        }
-    });   
+    dxResult.summarize(data);
 }
 
 module.exports.run = run;

@@ -31,7 +31,8 @@
         "request": "2.30.x",
         "grunt": "~0.4.1",
         "bluebird": "^2.9.30",
-        "mkdirp": "^0.5.1"
+        "mkdirp": "^0.5.1",
+        "url": "latest"
     },
     "devDependencies": {},
     "keywords": []

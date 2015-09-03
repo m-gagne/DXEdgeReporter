@@ -72,7 +72,35 @@ function run(siteList) {
             if (error) {
                 return console.error(error);
             }
-        });           
+        }); 
+        
+        // Retrieve & store the summary report as markdown  
+        var markdown = dxResult.generateMarkdownReport();
+    
+        var markdownDir = "reports/" + testId + "/markdown/";
+        mkdirp(markdownDir);    
+        file = markdownDir + "report.md";
+        fs.writeFile(file, markdown, function(error){
+            if (error) {
+                return console.error(error);
+            }
+        });
+        
+        // Retrieve & store the individual reports as markdown
+        var markdownDetailsDir = "reports/" + testId + "/markdown/details/";
+        mkdirp(markdownDetailsDir);
+        var details = dxResult.getReportDetails();
+        for (var i = 0; i < details.length; i++ ) {
+            markdown = dxResult.generateDetailedMarkdownReport(details[i]);
+
+            file = markdownDetailsDir + details[i].domain + ".md";
+            fs.writeFile(file, markdown, function(error){
+                if (error) {
+                    return console.error(error);
+                }
+            });                          
+        }
+              
     }
          
     for (var i = 0; i < length; i++) {

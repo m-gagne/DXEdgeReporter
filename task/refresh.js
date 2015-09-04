@@ -20,7 +20,8 @@
 var request = require('request'),
     fs = require('fs'),
     mkdirp = require('mkdirp'),
-    dxResult = require('../lib/transform.js');
+    dxResult = require('../lib/transform.js'),
+    url = require('url');
     
 function getTestID() {
 
@@ -109,24 +110,31 @@ function run(siteList) {
          
     for (var i = 0; i < length; i++) {
         var site = siteList[i];
-        console.log("Updating => " + site.url);
+        console.log("Validating => " + site.url);
         var testUrl = "http://localhost:1337/api/v2/scan?url=" + site.url;
         // Production: var testUrl = "http://aka.ms/dxscan?url=" + site.url;
         request(testUrl, function (error, response, content) {
+            var siteUrl = url.parse(response.request.uri.href, true).query.url;
             if (error) {
                 console.log(error);
                 return;
             }
             
-            processResults(content, outputDir);
+            processResults(siteUrl, content, outputDir);
             complete();
         });
     }
 }
 
-function processResults(result, outputDir) {
+function processResults(url, result, outputDir) {
     var data = dxResult.jsonToResults(result);
-    dxResult.summarize(data);
+    // Check for errors
+    if (data.message && data.message.indexOf("Error found") > -1) {
+        dxResult.couldNotScan(url)
+    }
+    else {
+        dxResult.summarize(data);        
+    }
 }
 
 module.exports.run = run;

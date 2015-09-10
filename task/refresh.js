@@ -21,7 +21,9 @@ var request = require('request'),
     fs = require('fs'),
     mkdirp = require('mkdirp'),
     dxResult = require('../lib/transform.js'),
-    url = require('url');
+    url = require('url'),
+    open = require('open'),
+    path = require('path');
     
 function getTestID() {
 
@@ -68,15 +70,36 @@ function run(siteList) {
         // Retrieve & store the summary report as markdown  
         var markdown = dxResult.generateMarkdownReport();
         var html = dxResult.markedownToHtml(markdown);
-    
-        var file = outputDir + "report.md";
-        fs.writeFile(file, markdown, function(error){
+        var file;
+        
+        // file = outputDir + "report.md";
+        // fs.writeFile(file, markdown, function(error){
+        //     if (error) {
+        //         return console.error(error);
+        //     }
+        // });
+        // 
+        file = outputDir + "report.html";
+        var reportFile = path.resolve(outputDir + "report.html");
+         
+        fs.writeFile(file, html, function(error){
             if (error) {
                 return console.error(error);
             }
         });
         
-        file = outputDir + "report.html";
+        // Retrieve & store the browser detection summary report as markdown & html
+        markdown = dxResult.generateBrowserDetectiondMarkdownReport();
+        html = dxResult.markedownToHtml(markdown);
+        
+        // file = outputDir + "browser-detection-summary.md";
+        // fs.writeFile(file, markdown, function(error){
+        //     if (error) {
+        //         return console.error(error);
+        //     }
+        // });
+        // 
+        file = outputDir + "browser-detection-summary.html";
         fs.writeFile(file, html, function(error){
             if (error) {
                 return console.error(error);
@@ -91,12 +114,12 @@ function run(siteList) {
             markdown = dxResult.generateDetailedMarkdownReport(details[i]);
             html = dxResult.markedownToHtml(markdown)
 
-            file = detailsDir + details[i].domain + ".md";
-            fs.writeFile(file, markdown, function(error){
-                if (error) {
-                    return console.error(error);
-                }
-            });
+            // file = detailsDir + details[i].domain + ".md";
+            // fs.writeFile(file, markdown, function(error){
+            //     if (error) {
+            //         return console.error(error);
+            //     }
+            // });
             
             file = detailsDir + details[i].domain + ".html";
             fs.writeFile(file, html, function(error){
@@ -105,6 +128,9 @@ function run(siteList) {
                 }
             });            
         }
+        
+        console.log("Open report: " + reportFile);
+        open("file://" + reportFile);
               
     }
          

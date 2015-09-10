@@ -34,7 +34,8 @@
         "mkdirp": "^0.5.1",
         "url": "latest",
         "marked": "latest",
-        "promised-io": "latest"
+        "promised-io": "latest",
+        "open": "latest"
     },
     "devDependencies": {},
     "keywords": []
